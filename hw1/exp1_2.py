@@ -81,7 +81,7 @@ logging.basicConfig(level=logging.INFO,
 # parse commandline arguments
 op = OptionParser()
 op.add_option("--lsa",
-							dest="n_components", type="int",default=20,
+							dest="n_components", type="int",
 							help="Preprocess documents with latent semantic analysis.") #使用潜在语义分析对文档进行预处理
 op.add_option("--no-minibatch",
 							action="store_false", dest="minibatch", default=True,
@@ -113,13 +113,13 @@ def document_clustering(estimator,name,X):
 
 	#print("Clustering sparse data with %s" % estimator)
 	t0 = time()
-	estimator.fit(X)#.toarray()  用toarray也行 但用了svd降维   	  
+	estimator.fit(X.toarray())#  用toarray也行 但用了svd降维   	  
 	#print("done in %0.3fs" % (time() - t0))
 	#print()   
 	if hasattr(estimator, 'labels_'):
 			y_pred = estimator.labels_
 	else:
-			y_pred = estimator.predict(data)
+			y_pred = estimator.predict(X)
 
 	print('%-9s\t\t\t%.2fs\t%.3f\t%.3f\t%.3f\t%.3f\t%.3f\t%.3f'
 				% (name, (time() - t0),
@@ -223,33 +223,34 @@ km = KMeans(n_clusters=true_k, init='k-means++', max_iter=100, n_init=1,
 								verbose=opts.verbose)
 document_clustering(km,'KMeans',X)
 
-af = AffinityPropagation(preference=-50,convergence_iter = 10,verbose=opts.verbose)
-document_clustering(km,'AfPro',X)
+af = AffinityPropagation(preference=-50,convergence_iter = 10,verbose=opts.verbose) #效果很差
+document_clustering(af,'AfPro',X)
 
 
-km = MeanShift(bandwidth=2)
-
-km  = AgglomerativeClustering(n_clusters=4,linkage='ward')
-
-km = AgglomerativeClustering(n_clusters=4,linkage='complete')
-
-km = AgglomerativeClustering(n_clusters=4,linkage='average')
-
-km = AgglomerativeClustering(n_clusters=4,linkage='single')
+ms = MeanShift(bandwidth=2)
+document_clustering(ms,'MeanS',X)
 
 
-km = SpectralClustering(n_clusters=4, eigen_solver='arpack', affinity="nearest_neighbors")
+whc  = AgglomerativeClustering(n_clusters=4,linkage='ward')
+document_clustering(whc,'Ward/Aggclu',X)
 
-#n_clusters 投影空间  random_state 类似seed 确定随机性  assign_labels 拉普拉斯分配标签的策略，有两种离散discretize和kmeans 默认kmeans
-#bench_Clustering(sc,name="SpeClu",data=data)
+chc = AgglomerativeClustering(n_clusters=4,linkage='complete')
+document_clustering(chc,'comp/Aggclu',X)
 
+ahc = AgglomerativeClustering(n_clusters=4,linkage='average')
+document_clustering(ahc,'ave/Aggclu',X)
 
-km = DBSCAN() #效果很差
-#bench_Clustering(db,name="DBSCAN",data=data)
-# eps 两个邻域之间两个样本的最大距离，最重要的参数
-# min_samples 当一个点周围有这些数量的同类点时被视为中心点
+shc = AgglomerativeClustering(n_clusters=4,linkage='single')  #效果很差
+document_clustering(shc,'sin/Aggclu',X)
 
-km = GaussianMixture(n_components = 4, covariance_type='full')
+sc = SpectralClustering(n_clusters=4, eigen_solver='arpack', affinity="nearest_neighbors")
+document_clustering(sc,'SpeClu',X)
+
+db = DBSCAN() #效果很差  当SVD取K=100的时候效果还行
+document_clustering(db,'DBSCAN',X)
+
+gau = GaussianMixture(n_components = 4, covariance_type='full')
+document_clustering(gau,'GauMix',X)
 
 
 """
