@@ -20,12 +20,16 @@
 
 ![图3](exp1_result/2.png)
 
-本次实验中我们仅取了这20个类中的alt.atheism, talk.religion.misc, comp.graphics, sci.space 4类。文档数据聚类大体上和手写数据集聚类差不多，但由于数据量和样本维度过大，直接采用原始数据进行聚类所消耗的时间会很长。因此我采用了SVD对原始数据进行降维提取重要特征，这样不仅可以让聚类时间大幅下降，还可以保证聚类的效果。下面的图分别是不降维，提取50维特征和提取100维特征的结果图。
+本次实验中我们仅取了这20个类中的alt.atheism, talk.religion.misc, comp.graphics, sci.space 4类。文档数据聚类大体上和手写数据集聚类差不多，但由于数据量和样本维度过大，直接采用原始数据进行聚类所消耗的时间会很长。因此我采用了SVD对原始数据进行降维提取重要特征，这样不仅可以让聚类时间大幅下降，还可以保证聚类的效果。下面的图分别是不降维，提取50维特征和提取100维特征的结果图。在和同学们的讨论中得知SVD降维的explained_variance即解释性差异一定程度上可以反映降维信息的保存度量，因此后来我额外加了1500维和2000维度的实验结果图如下所示。从结果来看，确实在某些聚类方法上(例如SpectralClustering)可以取得更佳的结果
 ![图4](exp1_result/exp2_result_NULL.png)
-
+50维：
 ![图5](exp1_result/exp2_result_50.png)
-
+100维：
 ![图6](exp1_result/exp2_result_100.png)
+1500维：
+![图17](exp1_result/exp2_result_1500.png)
+2000维：
+![图18](exp1_result/exp2_result_2000.png)
 
 
 ## 附录：手写数据集可视化结果
